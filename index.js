@@ -45,6 +45,7 @@ function addItemToShoppingList(itemName) {
   STORE.push({name: itemName, checked: false});
 }
 
+
 function handleNewItemSubmit() {
   $('#js-shopping-list-form').submit(function(event) {
     event.preventDefault();
@@ -82,7 +83,17 @@ function handleItemCheckClicked() {
 
 
 function handleDeleteItemClicked() {
-  console.log('`handleDeleteItemClicked` ran')
+  $('.js-shopping-list').on('click', '.js-item-delete', event => {
+    const itemIndex = getItemIndexFromElement(event.currentTarget);
+    deleteListItem(itemIndex);
+    renderShoppingList();
+  });
+}
+
+
+function deleteListItem(itemIndex) {
+  console.log(`Deleting item at index  ${itemIndex} from shopping list`)
+  STORE.splice(itemIndex, 1);
 }
 
 
