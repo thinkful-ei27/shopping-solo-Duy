@@ -85,15 +85,27 @@ function handleItemCheckClicked() {
 function handleDeleteItemClicked() {
   $('.js-shopping-list').on('click', '.js-item-delete', event => {
     const itemIndex = getItemIndexFromElement(event.currentTarget);
-    deleteListItem(itemIndex);
+    deleteClickedItem(itemIndex);
     renderShoppingList();
   });
 }
 
 
-function deleteListItem(itemIndex) {
-  console.log(`Deleting item at index  ${itemIndex} from shopping list`)
+function deleteClickedItem(itemIndex) {
   STORE.splice(itemIndex, 1);
+}
+
+function handleCheckBox(){
+  // Will handle the check box toggle 
+}
+
+
+function handleSearchBox(){
+  // Will handle search box imputs
+}
+
+function handleTitleEdit(){
+  // Let users edit title of an item
 }
 
 
