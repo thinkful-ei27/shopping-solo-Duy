@@ -1,12 +1,16 @@
 'use strict';
 
-const STORE = [
+const STORE = {
+
+items : [
   {name: "apples", checked: false},
   {name: "oranges", checked: false},
   {name: "milk", checked: true},
   {name: "bread", checked: false}
 ];
-
+displayUncheckItem: false,
+searchTerm: ''
+};
 
 function generateItemElement(item, itemIndex, template) {
   return `
@@ -25,23 +29,19 @@ function generateItemElement(item, itemIndex, template) {
 
 
 function generateShoppingItemsString(shoppingList) {
-  console.log("Generating shopping list element");
-
   const items = shoppingList.map((item, index) => generateItemElement(item, index));
-  
   return items.join("");
 }
 
 
 function renderShoppingList() {
-  console.log('`renderShoppingList` ran');
   const shoppingListItemsString = generateShoppingItemsString(STORE);
   $('.js-shopping-list').html(shoppingListItemsString);
 }
 
 
 function addItemToShoppingList(itemName) {
-  console.log(`Adding "${itemName}" to shopping list`);
+  const {items} = STORE;
   STORE.push({name: itemName, checked: false});
 }
 
@@ -49,7 +49,6 @@ function addItemToShoppingList(itemName) {
 function handleNewItemSubmit() {
   $('#js-shopping-list-form').submit(function(event) {
     event.preventDefault();
-    console.log('`handleNewItemSubmit` ran');
     const newItemName = $('.js-shopping-list-entry').val();
     $('.js-shopping-list-entry').val('');
     addItemToShoppingList(newItemName);
@@ -59,8 +58,8 @@ function handleNewItemSubmit() {
 
 
 function toggleCheckedForListItem(itemIndex) {
-  console.log("Toggling checked property for item at index " + itemIndex);
-  STORE[itemIndex].checked = !STORE[itemIndex].checked;
+  const {items} = STORE;
+  items[itemIndex].checked = !STORE[itemIndex].checked;
 }
 
 
@@ -74,7 +73,6 @@ function getItemIndexFromElement(item) {
 
 function handleItemCheckClicked() {
   $('.js-shopping-list').on('click', `.js-item-toggle`, event => {
-    console.log('`handleItemCheckClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
     toggleCheckedForListItem(itemIndex);
     renderShoppingList();
@@ -92,16 +90,28 @@ function handleDeleteItemClicked() {
 
 
 function deleteClickedItem(itemIndex) {
-  STORE.splice(itemIndex, 1);
+  const { items } = STORE;
+  items.splice(itemIndex, 1);
 }
 
-function handleCheckBox(){
-  // Will handle the check box toggle 
+function handleCheckToggle(){
+ $('.js-check-box').on('change', function(){
+  STORE.displayUncheckItems = !STORE.displayUncheckItems;
+  renderShoppingList();
+})
 }
 
+function usersSearchTerm(word){
+  return STORE.searchTerm = word;
+}
 
 function handleSearchBox(){
-  // Will handle search box imputs
+  $('.js-search-box').on('keyup', function(){
+    usersSearchTerm($(this).val());
+  });
+}
+  
+
 }
 
 function handleTitleEdit(){
@@ -114,6 +124,8 @@ function handleShoppingList() {
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
+  handleCheckToggle();
+  handleSearchBox();
 }
 
 
